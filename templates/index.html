@@ -36,7 +36,7 @@
 
 
                 <form onsubmit="return validateForm()">
-                    <h2 class="formbold-form-title">Personal Details</h2>
+                    <h2 class="formbold-form-title">Patient Details</h2>
 
                     <div class="formbold-input-flex">
                         <div>
@@ -49,9 +49,13 @@
 
                     <div class="formbold-input-flex">
                         <div>
-                            <label for="age" class="formbold-form-label">Age*</label>
+                            <!-- <label for="age" class="formbold-form-label">Age*</label> -->
+                            <label for="age" class="formbold-form-label">Age*
+                                <span class="info-icon"
+                                    data-tooltip="Age of the patient in years, an important factor in health risk assessment">ⓘ</span>
+                            </label>
                             <select name="age" id="age" class="formbold-select" required>
-                                <option value="" disabled selected>Select your age</option>
+                                <option value="" disabled selected>Select age</option>
                                 <option value="under_18">Under 18</option>
                                 <option value="18_24">18-24</option>
                                 <option value="25_34">25-34</option>
@@ -75,7 +79,11 @@
 
                     <div class="formbold-input-flex">
                         <div>
-                            <label class="formbold-form-label">Gender*</label>
+                            <!-- <label class="formbold-form-label">Gender*</label> -->
+                            <label class="formbold-form-label">Gender*
+                                <span class="info-icon"
+                                    data-tooltip="Patient's gender, which can influence health risks and outcomes">ⓘ</span>
+                            </label>
                             <div class="formbold-radio-group">
                                 <label class="formbold-radio-label">
                                     <input type="radio" name="gender" value="male" class="formbold-radio-input"
@@ -103,7 +111,11 @@
 
                     <div class="formbold-input-flex">
                         <div>
-                            <label class="formbold-form-label">Race*</label>
+                            <!-- <label class="formbold-form-label">Race*</label> -->
+                            <label class="formbold-form-label">Race*
+                                <span class="info-icon"
+                                    data-tooltip="Patient's racial background, which may affect risk assessment and healthcare access">ⓘ</span>
+                            </label>
                             <div class="formbold-radio-group">
                                 <label class="formbold-radio-label">
                                     <input type="radio" name="race" value="Black" class="formbold-radio-input"
@@ -131,8 +143,13 @@
 
                     <div class="formbold-input-flex">
                         <div>
+                            <!-- <label for="lasix_dose_count_tm1" class="formbold-form-label">
+                                Lasix Dose Count*
+                            </label> -->
                             <label for="lasix_dose_count_tm1" class="formbold-form-label">
                                 Lasix Dose Count*
+                                <span class="info-icon"
+                                    data-tooltip="Number of times a water pill medication was prescribed to remove excess fluid from the body">ⓘ</span>
                             </label>
                             <input type="number" name="lasix_dose_count_tm1" id="lasix_dose_count_tm1"
                                 class="formbold-form-input" min="0" required />
@@ -150,6 +167,8 @@
                         <div>
                             <label for="cre_tests_tm1" class="formbold-form-label">
                                 Creatinine Tests*
+                                <span class="info-icon"
+                                    data-tooltip="Blood tests that show how well the kidneys are functioning">ⓘ</span>
                             </label>
                             <input type="number" name="cre_tests_tm1" id="cre_tests_tm1" class="formbold-form-input"
                                 min="0" required />
@@ -169,7 +188,8 @@
                     <div class="formbold-input-flex">
                         <div>
                             <label for="crp_tests_tm1" class="formbold-form-label">
-                                C-reactive Protein Tests*
+                                C-reactive Protein Tests* <span class="info-icon"
+                                    data-tooltip="Blood tests that measure inflammation levels in the body">ⓘ</span>
                             </label>
                             <input type="number" name="crp_tests_tm1" id="crp_tests_tm1" class="formbold-form-input"
                                 min="0" required />
@@ -186,7 +206,8 @@
                         </div>
                         <div>
                             <label for="esr_tests_tm1" class="formbold-form-label">
-                                Erythrocyte Sedimentation Rate Tests*
+                                Erythrocyte Sedimentation Rate Tests* <span class="info-icon"
+                                    data-tooltip="Simple blood tests that check for inflammation in the body">ⓘ</span>
                             </label>
                             <input type="number" name="esr_tests_tm1" id="esr_tests_tm1" class="formbold-form-input"
                                 min="0" required />
@@ -205,7 +226,8 @@
                     <div class="formbold-input-flex">
                         <div>
                             <label for="ghba1c_tests_tm1" class="formbold-form-label">
-                                Hemoglobin A1c Tests*
+                                Hemoglobin A1c Tests* <span class="info-icon"
+                                    data-tooltip="Tests that show average blood sugar levels over the past 3 months (diabetes indicator)">ⓘ</span>
                             </label>
                             <input type="number" name="ghba1c_tests_tm1" id="ghba1c_tests_tm1"
                                 class="formbold-form-input" min="0" required />
@@ -221,7 +243,8 @@
                         </div>
                         <div>
                             <label for="hct_tests_tm1" class="formbold-form-label">
-                                Hematocrit Tests*
+                                Hematocrit Tests* <span class="info-icon"
+                                    data-tooltip="Tests that measure the percentage of red blood cells in blood (anemia indicator)">ⓘ</span>
                             </label>
                             <input type="number" name="hct_tests_tm1" id="hct_tests_tm1" class="formbold-form-input"
                                 min="0" required />
@@ -240,7 +263,8 @@
                     <div class="formbold-input-flex">
                         <div>
                             <label for="ldl_tests_tm1" class="formbold-form-label">
-                                Low-Density Lipoprotein Tests*
+                                Low-Density Lipoprotein Tests* <span class="info-icon"
+                                    data-tooltip="Tests that measure 'bad' cholesterol levels in the blood">ⓘ</span>
                             </label>
                             <input type="number" name="ldl_tests_tm1" id="ldl_tests_tm1" class="formbold-form-input"
                                 min="0" required />
@@ -256,8 +280,12 @@
                             </div>
                         </div>
                         <div>
-                            <label for="nt_bnp_tests_tm1" class="formbold-form-label">
+                            <!-- <label for="nt_bnp_tests_tm1" class="formbold-form-label">
                                 NTBNP Tests*
+                            </label> -->
+                            <label for="nt_bnp_tests_tm1" class="formbold-form-label">
+                                NTBNP Tests* <span class="info-icon"
+                                    data-tooltip="Tests that check for heart failure and heart stress">ⓘ</span>
                             </label>
                             <input type="number" name="nt_bnp_tests_tm1" id="nt_bnp_tests_tm1"
                                 class="formbold-form-input" min="0" required />
@@ -276,7 +304,8 @@
                     <div class="formbold-input-flex">
                         <div>
                             <label for="sodium_tests_tm1" class="formbold-form-label">
-                                Sodium Tests*
+                                Sodium Tests* <span class="info-icon"
+                                    data-tooltip="Blood tests that check for proper salt balance in the body">ⓘ</span>
                             </label>
                             <input type="number" name="sodium_tests_tm1" id="sodium_tests_tm1"
                                 class="formbold-form-input" min="0" required />
@@ -292,7 +321,8 @@
                         </div>
                         <div>
                             <label for="trig_tests_tm1" class="formbold-form-label">
-                                Triglyceride Tests*
+                                Triglyceride Tests* <span class="info-icon"
+                                    data-tooltip="Blood tests that measure a type of fat linked to heart disease">ⓘ</span>
                             </label>
                             <input type="number" name="trig_tests_tm1" id="trig_tests_tm1" class="formbold-form-input"
                                 min="0" required />
@@ -308,7 +338,10 @@
                         </div>
                     </div>
 
-                    <h2 class="formbold-form-title">Biomarkers</h2>
+                    <!-- <h2 class="formbold-form-title">Biomarkers</h2> -->
+                    <h2 class="formbold-form-title">Biomarkers <span class="info-icon"
+                            data-tooltip="Measurable indicators that can be tested to evaluate health status">ⓘ</span>
+                    </h2>
                     <p style="padding-bottom: 10px;">
                         Biomarker can be measured to assess
                         health, disease progression, or response to treatment. It provides valuable information for
@@ -329,7 +362,7 @@
                         </div>
                     </div>
 
-                    <h2 class="formbold-form-title">Comorbidity</h2>
+                    <!-- <h2 class="formbold-form-title">Comorbidity</h2>
                     <p style="padding-bottom: 10px;">
 
                         Comorbidity refers to the presence of one or more additional health conditions occurring
@@ -349,9 +382,12 @@
                                 <div class="slider-value" id="comorbiditySliderValue">0</div>
                             </div>
                         </div>
-                    </div>
+                    </div> -->
 
-                    <h2 class="formbold-form-title">Output Variable</h2>
+                    <!-- <h2 class="formbold-form-title">Output Variable</h2> -->
+                    <h2 class="formbold-form-title">Output Variable <span class="info-icon"
+                            data-tooltip="The health outcome that your algorithm will predict based on patient data">ⓘ</span>
+                    </h2>
                     <p style="padding-bottom: 10px;">
                         Select the desired output Variables.
                     </p>
