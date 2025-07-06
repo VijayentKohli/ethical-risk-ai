@@ -20,9 +20,7 @@ FEATURES = [
 # Define the target columns for prediction
 TARGET_COLUMNS = ['risk_score_t', 'cost_t', 'bps_mean_t', 'gagne_sum_t', 'ldl_mean_t']
 
-
 # Define feature importance for each target, where weights represent the impact of each feature
-
 FEATURES_IMPORTANCE = {
         "risk_score_t": {
         "cre_tests_tm1": 0.331480,
@@ -111,8 +109,6 @@ FEATURES_IMPORTANCE = {
     }
 
 }
-
-
 
 # Load the scaler and model once during application startup to avoid reloading on each request
 def load_scaler_and_model():

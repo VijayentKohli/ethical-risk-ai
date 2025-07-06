@@ -1,5 +1,3 @@
-
-// Function to update slider value display
 function updateSliderValue(slider) {
     // Get the ID of the slider element and find the corresponding value display element
     const sliderValueDisplay = document.getElementById(slider.id + 'Value');
@@ -8,19 +6,14 @@ function updateSliderValue(slider) {
 }
 
 // Optional: You can add validation or form submission functionality if needed.
-
-
 document.addEventListener("DOMContentLoaded", function () {
-
-
-
 
     const form = document.querySelector('form'); // Select the form element
 
     form.addEventListener('submit', function (event) {
-        event.preventDefault(); // Prevent the default form submission
+        event.preventDefault();
 
-        // Define the age mapping object
+        // Age mapping to convert age group to a specific value
         const ageMapping = {
             'under_18': 18,  // Added an entry for 'under_18'
             '18_24': 21,
@@ -34,11 +27,10 @@ document.addEventListener("DOMContentLoaded", function () {
         // Create a FormData object from the form
         const formData = new FormData(form);
 
-        // Get the age group selected and map it to the appropriate value
         const selectedAge = formData.get('age');
         const ageValue = ageMapping[selectedAge];
 
-        // Build the JSON object based on the API's expected structure with the correct data types
+        // Construct the JSON object to match the API's expected structure and ensure proper data types
         const data = {
             // Features
             'features': {
@@ -82,31 +74,43 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         };
 
+        console.log('Form data:', formData);
+        console.log('Form data:', JSON.stringify(formData));
+        console.log('Data', JSON.stringify(data));
 
-
-
-        // Log the data to the console for testing
-        console.log(JSON.stringify(data));
-        // Send the data to the API via fetch
-        fetch('https://healthscore-h6hdche4gyfbb5cn.southindia-01.azurewebsites.net/predict', {
+        // Send the data to the API via fetch. Replace with Azure endpoint when deploying.
+        // fetch('https://healthscore-h6hdche4gyfbb5cn.southindia-01.azurewebsites.net/predict', {
+        fetch('http://127.0.0.1:5000/predict', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify(data) // Send the JSON object
         })
-            .then(response => response.json())
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}, StatusText: ${response.statusText}`);
+                }
+                return response.json();
+            })
             .then(result => {
-                console.log('Result object:', result);
+                console.log('API call successful. Result object:', result);
+
                 // Store form data and updated result in localStorage
                 localStorage.setItem('data', JSON.stringify(data));
                 localStorage.setItem('result', JSON.stringify(result));
+
                 // Redirect to the result page
                 window.location.href = '/result';
-
             })
-            .catch(error => console.error('Error:', error));
+            .catch(error => {
+                console.error('Error occurred during API call:', error);
 
-
+                // Display an error message to the user
+                const errorMessage = document.createElement('p');
+                errorMessage.textContent = 'An error occurred while processing your request. Please try again later.';
+                errorMessage.style.color = 'red';
+                form.appendChild(errorMessage);
+            });
     });
 });
