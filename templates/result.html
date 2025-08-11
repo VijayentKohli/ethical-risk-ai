@@ -45,6 +45,19 @@
                 <p id="predicted-score-output">
                     <!-- Predicted score will display here on button click -->
                 </p>
+
+                <div class="formbold-event-details">
+                    <h5>Student Information</h5>
+                    <label for="student-name">Name:</label>
+                    <input type="text" id="student-name" class="formbold-input" placeholder="Enter your name" required>
+                    <label for="student-email">Email:</label>
+                    <input type="email" id="student-email" class="formbold-input" placeholder="Enter your email"
+                        required>
+                </div>
+
+                <button id="save-to-sheet" class="formbold-btn" type="button" disabled>Save to Google Sheet</button>
+                <div id="submission-status" style="display: none;"></div>
+
             </div>
         </div>
     </div>
@@ -54,6 +67,19 @@
             const data = JSON.parse(localStorage.getItem('data'));
             const result = JSON.parse(localStorage.getItem('result'));
             const desired_targets = data.desired_targets;
+
+            // Enable button only if name and email are valid
+            const nameInput = document.getElementById('student-name');
+            const emailInput = document.getElementById('student-email');
+            const submitButton = document.getElementById('save-to-sheet');
+
+            function validateInputs() {
+                const nameValid = nameInput.value.trim().length > 0;
+                const emailValid = /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(emailInput.value.trim());
+                submitButton.disabled = !(nameValid && emailValid);
+            }
+            nameInput.addEventListener('input', validateInputs);
+            emailInput.addEventListener('input', validateInputs);
 
             if (data && result) {
                 const formDetails = document.querySelector('.formbold-event-details:first-of-type ul');
@@ -87,12 +113,80 @@
                     this.style.display = 'none';
                 });
 
-            } else {
-                document.body.innerHTML = '<p>No results available. Please go back and submit the form again.</p>';
+                // Add Google Sheet submission functionality
+                submitButton.addEventListener('click', async function () {
+                    const statusDiv = document.getElementById('submission-status');
+
+                    submitButton.disabled = true;
+                    submitButton.textContent = 'Submitting...';
+
+                    // Prepare flat columns for features and weights
+                    const featureColumns = {};
+                    Object.entries(data.features).forEach(([key, value]) => {
+                        featureColumns[`${key}_value`] = value;
+                    });
+                    const weightColumns = {};
+                    Object.entries(data.weight).forEach(([key, value]) => {
+                        weightColumns[`${key}_weight`] = value;
+                    });
+
+                    // Prepare flat columns for predicted_scores and weighted_scores
+                    const predictedScoreColumns = {};
+                    Object.entries(result.predicted_scores).forEach(([key, value]) => {
+                        predictedScoreColumns[`${key}_predicted`] = value;
+                    });
+                    const weightedScoreColumns = {};
+                    Object.entries(result.weighted_scores).forEach(([key, value]) => {
+                        weightedScoreColumns[`${key}_weighted`] = value;
+                    });
+
+                    // Prepare submission data
+                    const submissionData = {
+                        student_name: nameInput.value.trim(),
+                        student_email: emailInput.value.trim(),
+                        ...featureColumns,
+                        ...weightColumns,
+                        desired_outputs: data.desired_targets.join(", "),
+                        ...predictedScoreColumns,
+                        ...weightedScoreColumns
+                    };
+
+                    console.log('Submission Data:', submissionData); // Add this line
+
+                    try {
+                        const response = await fetch('/submit-to-sheet', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify(submissionData)
+                        });
+
+                        if (!response.ok) {
+                            throw new Error(`HTTP error! status: ${response.status}`);
+                        }
+
+                        const responseData = await response.json();
+
+                        statusDiv.style.display = 'block';
+                        if (responseData.status === 'success') {
+                            statusDiv.innerHTML = '✅ Results submitted successfully!';
+                            statusDiv.className = 'success-message';
+                            submitButton.style.display = 'none';
+                        } else {
+                            throw new Error(responseData.message || 'Submission failed');
+                        }
+                    } catch (error) {
+                        console.error('Error:', error);
+                        statusDiv.innerHTML = `❌ Error submitting results: ${error.message}`;
+                        statusDiv.className = 'error-message';
+                        submitButton.disabled = false;
+                        submitButton.textContent = 'Save to Google Sheet';
+                    }
+                });
             }
         });
     </script>
-
 </body>
 
 </html>

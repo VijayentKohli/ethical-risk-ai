@@ -1,13 +1,20 @@
-
 from flask import Flask, request, jsonify, render_template
 import pickle
 import gzip
 import pandas as pd
 from flask_cors import CORS
+import requests
 
 # Initialize the Flask application
 app = Flask(__name__)
-CORS(app)  # Enable Cross-Origin Resource Sharing (CORS)
+# Configure CORS to allow Google Apps Script domain
+CORS(app, resources={
+    r"/*": {
+        "origins": ["https://script.google.com", "http://127.0.0.1:5000"],
+        "methods": ["OPTIONS", "POST", "GET"],
+        "allow_headers": ["Content-Type"]
+    }
+})
 
 # Define the feature columns expected in input data
 FEATURES = [
@@ -150,10 +157,12 @@ def predict():
     if not data:
         return jsonify({"error": "No input data provided"}), 400
 
-    # Extract input features, desired targets, and weight values from request data
+    # Extract input features, desired targets, weights, and student info from request data
     input_features = data.get('features')
     desired_targets = data.get('desired_targets')
     weights = data.get('weight')
+    student_name = data.get('student_name')
+    student_email = data.get('student_email')
 
     # Validate presence of required fields
     if input_features is None:
@@ -162,6 +171,13 @@ def predict():
         return jsonify({"error": "Missing 'desired_targets' in input data"}), 400
     if weights is None:
         return jsonify({"error": "Missing 'weight' in input data"}), 400
+    
+    # Store student info in the response data
+    response_data = {}
+    if student_name:
+        response_data['student_name'] = student_name
+    if student_email:
+        response_data['student_email'] = student_email
 
     # Ensure desired targets are valid
     valid_targets = [target for target in desired_targets if target in TARGET_COLUMNS]
@@ -241,6 +257,30 @@ def predict():
     except Exception as e:
         # Handle any errors during prediction process
         return jsonify({"error": f"An error occurred during prediction: {str(e)}"}), 500
+
+GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzxlm1ty2LfZ-6t92YD5WA4cwQxaBAh5srwucynmFdqaTm2j-WW1tpztw7Iqf08yUJ7/exec"
+
+@app.route('/submit-to-sheet', methods=['POST'])
+def submit_to_sheet():
+    try:
+        data = request.get_json()
+        # Forward the data to Google Apps Script web app
+        response = requests.post(
+            GOOGLE_SCRIPT_URL,
+            json=data,
+            headers={'Content-Type': 'application/json'}
+        )
+        # Try to parse the response from Google Apps Script
+        if response.ok:
+            try:
+                result = response.json()
+            except Exception:
+                result = {'status': 'success', 'message': response.text}
+            return jsonify(result), 200
+        else:
+            return jsonify({'status': 'error', 'message': f'Google Script error: {response.text}'}), 500
+    except Exception as e:
+        return jsonify({'status': 'error', 'message': str(e)}), 500
 
 # Run the app in production mode
 if __name__ == '__main__':

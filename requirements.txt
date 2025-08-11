@@ -4,3 +4,4 @@ scikit-learn==1.4.2
 flask_compress==1.15
 flask-cors == 5.0.0
 gunicorn
+requests
