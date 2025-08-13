@@ -349,8 +349,7 @@
                     </p>
                     <div class="formbold-input-flex">
                         <div>
-                            <input type="number" name="biomarker" id="biomarker" class="formbold-form-input" min="0"
-                                required />
+                            <input type="number" name="biomarker" id="biomarker" class="formbold-form-input" min="1" max="100" required />
                         </div>
                         <div>
                             <label for="biomarkerSlider" class="formbold-form-label">Biomarker Weight (0-1)*</label>
@@ -371,8 +370,7 @@
                     </p>
                     <div class="formbold-input-flex">
                         <div>
-                            <input type="number" name="comorbidity" id="comorbidity" class="formbold-form-input" min="0"
-                                required />
+                            <input type="number" name="comorbidity" id="comorbidity" class="formbold-form-input" min="1" max="100" required />
                         </div>
                         <div>
                             <label for="comorbiditySlider" class="formbold-form-label">Comorbidity Weight (0-1)*</label>
@@ -417,7 +415,64 @@
 
         </div>
 
-        <script src="{{ url_for('static', filename='script.js') }}">
+        <script src="{{ url_for('static', filename='script.js') }}"></script>
+        <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const biomarkerInput = document.getElementById('biomarker');
+            const comorbidityInput = document.getElementById('comorbidity');
+            const submitBtn = document.querySelector('button[type="submit"]');
+
+            function validateRange(input, min, max) {
+                const value = parseInt(input.value, 10);
+                return !isNaN(value) && value >= min && value <= max;
+            }
+
+            function showError(input, message) {
+                let error = input.parentNode.querySelector('.input-error');
+                if (!error) {
+                    error = document.createElement('div');
+                    error.className = 'input-error';
+                    error.style.color = 'red';
+                    error.style.fontSize = '0.9em';
+                    input.parentNode.appendChild(error);
+                }
+                error.textContent = message;
+            }
+
+            function clearError(input) {
+                const error = input.parentNode.querySelector('.input-error');
+                if (error) error.remove();
+            }
+
+            function validateFormInputs() {
+                let valid = true;
+                if (!validateRange(biomarkerInput, 1, 100)) {
+                    showError(biomarkerInput, 'Biomarker value must be between 1 and 100');
+                    valid = false;
+                } else {
+                    clearError(biomarkerInput);
+                }
+                if (!validateRange(comorbidityInput, 1, 100)) {
+                    showError(comorbidityInput, 'Comorbidity value must be between 1 and 100');
+                    valid = false;
+                } else {
+                    clearError(comorbidityInput);
+                }
+                submitBtn.disabled = !valid;
+                return valid;
+            }
+
+            biomarkerInput.addEventListener('input', validateFormInputs);
+            comorbidityInput.addEventListener('input', validateFormInputs);
+
+            // Override form submit to prevent submission if invalid
+            const form = document.querySelector('form');
+            form.addEventListener('submit', function(e) {
+                if (!validateFormInputs()) {
+                    e.preventDefault();
+                }
+            });
+        });
         </script>
 
 </body>

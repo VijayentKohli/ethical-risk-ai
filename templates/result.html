@@ -215,8 +215,8 @@
 
                     // Prepare submission data with CORRECT column names (no spaces)
                     const submissionData = {
-                        StudentName: nameInput.value.trim(),        // Changed: no space, matches Google Sheets
-                        StudentEmail: emailInput.value.trim(),     // Changed: no space, matches Google Sheets
+                        Student_Name: nameInput.value.trim(),        // Changed: matches Google Sheets
+                        Student_Email: emailInput.value.trim(),     // Changed: matches Google Sheets
                         ...featureColumns,
                         ...weightColumns,
                         desired_outputs: data.desired_targets.join(", "),
