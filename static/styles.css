@@ -417,3 +417,307 @@ body {
         transform: translateY(0);
     }
 }
+
+/* Add these styles to the end of your existing styles.css file */
+
+/* Modern Student Information Section */
+.student-info-modern {
+    background: linear-gradient(145deg, #ffffff 0%, #f8fafc 100%);
+    border: 1px solid #e2e8f0;
+    border-radius: 16px;
+    padding: 32px;
+    margin: 30px 0;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+    transition: all 0.3s ease;
+    animation: fadeInUp 0.6s ease-out;
+}
+
+.student-info-modern:hover {
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+    transform: translateY(-2px);
+}
+
+.student-info-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+.header-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    background: linear-gradient(135deg, #6a64f1 0%, #8b5cf6 100%);
+    border-radius: 12px;
+    color: white;
+    box-shadow: 0 4px 12px rgba(106, 100, 241, 0.3);
+}
+
+.header-text h5 {
+    color: #1e293b;
+    font-size: 20px;
+    font-weight: 600;
+    margin: 0 0 4px 0;
+    line-height: 1.2;
+}
+
+.header-text p {
+    color: #64748b;
+    font-size: 14px;
+    margin: 0;
+    line-height: 1.4;
+}
+
+.student-input-group {
+    display: grid;
+    gap: 24px;
+    margin-bottom: 20px;
+}
+
+@media (min-width: 768px) {
+    .student-input-group {
+        grid-template-columns: 1fr 1fr;
+        gap: 24px;
+    }
+}
+
+.input-wrapper {
+    position: relative;
+    margin-bottom: 0;
+}
+
+.modern-label {
+    display: block;
+    color: #374151;
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 8px;
+    transition: color 0.2s ease;
+}
+
+.modern-input {
+    width: 100%;
+    padding: 16px 0;
+    border: none;
+    border-bottom: 2px solid #e5e7eb;
+    background: transparent;
+    font-size: 16px;
+    color: #1f2937;
+    outline: none;
+    transition: all 0.3s ease;
+    font-weight: 400;
+}
+
+.modern-input::placeholder {
+    color: #9ca3af;
+    transition: all 0.3s ease;
+}
+
+.input-underline {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 2px;
+    width: 0;
+    background: linear-gradient(90deg, #6a64f1 0%, #8b5cf6 100%);
+    transition: width 0.3s ease;
+}
+
+/* Input States */
+.input-wrapper.focused .input-underline {
+    width: 100%;
+}
+
+.input-wrapper.focused .modern-label {
+    color: #6a64f1;
+}
+
+.input-wrapper.focused .modern-input::placeholder {
+    color: transparent;
+}
+
+.input-wrapper.has-value .modern-input {
+    border-bottom-color: #d1d5db;
+}
+
+.input-wrapper.is-valid .modern-input {
+    border-bottom-color: #10b981;
+}
+
+.input-wrapper.is-valid .input-underline {
+    background: #10b981;
+    width: 100%;
+}
+
+.input-wrapper.is-invalid .modern-input {
+    border-bottom-color: #ef4444;
+}
+
+.input-wrapper.is-invalid .input-underline {
+    background: #ef4444;
+    width: 100%;
+}
+
+/* Privacy Notice */
+.privacy-notice {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: #f1f5f9;
+    padding: 12px 16px;
+    border-radius: 8px;
+    font-size: 13px;
+    color: #475569;
+    border-left: 3px solid #6a64f1;
+}
+
+.privacy-icon {
+    font-size: 16px;
+}
+
+/* Modern Submit Button */
+.modern-submit-btn {
+    position: relative;
+    background: linear-gradient(135deg, #6a64f1 0%, #8b5cf6 100%);
+    border: none;
+    border-radius: 12px;
+    padding: 16px 32px;
+    font-size: 16px;
+    font-weight: 600;
+    color: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(106, 100, 241, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 54px;
+}
+
+.modern-submit-btn:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(106, 100, 241, 0.4);
+    background: linear-gradient(135deg, #5b5bd6 0%, #7c3aed 100%);
+}
+
+.modern-submit-btn:disabled {
+    background: #cbd5e1;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+.modern-submit-btn.btn-ready {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+}
+
+.modern-submit-btn.btn-ready:hover {
+    background: linear-gradient(135deg, #059669 0%, #047857 100%);
+    box-shadow: 0 8px 25px rgba(16, 185, 129, 0.4);
+}
+
+.modern-submit-btn.loading {
+    background: #6b7280;
+    cursor: wait;
+}
+
+/* Button Loader */
+.btn-loader {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.spinner {
+    width: 20px;
+    height: 20px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    border-top-color: white;
+    animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Modern Success/Error Messages */
+.modern-success {
+    background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+    color: #065f46;
+    padding: 16px 20px;
+    border-radius: 12px;
+    border-left: 4px solid #10b981;
+    margin-top: 16px;
+    font-weight: 500;
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.15);
+}
+
+.modern-error {
+    background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+    color: #991b1b;
+    padding: 16px 20px;
+    border-radius: 12px;
+    border-left: 4px solid #ef4444;
+    margin-top: 16px;
+    font-weight: 500;
+    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.15);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .student-info-modern {
+        padding: 24px 20px;
+        margin: 20px 0;
+    }
+
+    .student-input-group {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+
+    .header-icon {
+        width: 40px;
+        height: 40px;
+    }
+
+    .header-text h5 {
+        font-size: 18px;
+    }
+}
+
+/* Focus Management */
+.modern-input:focus {
+    outline: none;
+}
+
+.modern-input:focus-visible {
+    outline: 2px solid #6a64f1;
+    outline-offset: 2px;
+}
+
+.modern-submit-btn:focus-visible {
+    outline: 2px solid #6a64f1;
+    outline-offset: 2px;
+}
+
+/* Animation for smooth transitions */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

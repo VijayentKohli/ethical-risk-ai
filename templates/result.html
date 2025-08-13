@@ -46,16 +46,54 @@
                     <!-- Predicted score will display here on button click -->
                 </p>
 
-                <div class="formbold-event-details">
-                    <h5>Student Information</h5>
-                    <label for="student-name">Name:</label>
-                    <input type="text" id="student-name" class="formbold-input" placeholder="Enter your name" required>
-                    <label for="student-email">Email:</label>
-                    <input type="email" id="student-email" class="formbold-input" placeholder="Enter your email"
-                        required>
+                <!-- Modern Student Information Section -->
+                <div class="student-info-modern">
+                    <div class="student-info-header">
+                        <div class="header-icon">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path
+                                    d="M20 21V19C20 17.9391 19.5786 16.9217 18.8284 16.1716C18.0783 15.4214 17.0609 15 16 15H8C6.93913 15 5.92172 15.4214 5.17157 16.1716C4.42143 16.9217 4 17.9391 4 19V21"
+                                    stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" />
+                                <circle cx="12" cy="7" r="4" stroke="currentColor" stroke-width="2"
+                                    stroke-linecap="round" stroke-linejoin="round" />
+                            </svg>
+                        </div>
+                        <div class="header-text">
+                            <h5>Student Information</h5>
+                            <p>Save your results to our database</p>
+                        </div>
+                    </div>
+
+                    <div class="student-input-group">
+                        <div class="input-wrapper">
+                            <label for="student-name" class="modern-label">Full Name</label>
+                            <input type="text" id="student-name" class="modern-input" placeholder="Enter your full name"
+                                required>
+                            <div class="input-underline"></div>
+                        </div>
+
+                        <div class="input-wrapper">
+                            <label for="student-email" class="modern-label">Email Address</label>
+                            <input type="email" id="student-email" class="modern-input" placeholder="Enter your email"
+                                required>
+                            <div class="input-underline"></div>
+                        </div>
+                    </div>
+
+                    <!-- <div class="privacy-notice">
+                        <div class="privacy-icon">🔒</div>
+                        <span>Your information is securely stored and used only for academic purposes</span>
+                    </div> -->
                 </div>
 
-                <button id="save-to-sheet" class="formbold-btn" type="button" disabled>Save to Google Sheet</button>
+                <button id="save-to-sheet" class="formbold-btn modern-submit-btn" type="button" disabled>
+                    <span class="btn-text">Save Results</span>
+                    <div class="btn-loader" style="display: none;">
+                        <div class="spinner"></div>
+                    </div>
+                </button>
                 <div id="submission-status" style="display: none;"></div>
 
             </div>
@@ -76,10 +114,42 @@
             function validateInputs() {
                 const nameValid = nameInput.value.trim().length > 0;
                 const emailValid = /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(emailInput.value.trim());
+
+                // Update visual validation states
+                updateInputState(nameInput, nameValid);
+                updateInputState(emailInput, emailValid);
+
                 submitButton.disabled = !(nameValid && emailValid);
+
+                if (nameValid && emailValid) {
+                    submitButton.classList.add('btn-ready');
+                } else {
+                    submitButton.classList.remove('btn-ready');
+                }
             }
+
+            function updateInputState(input, isValid) {
+                const wrapper = input.closest('.input-wrapper');
+                if (input.value.trim() !== '') {
+                    wrapper.classList.add('has-value');
+                    if (isValid) {
+                        wrapper.classList.add('is-valid');
+                        wrapper.classList.remove('is-invalid');
+                    } else {
+                        wrapper.classList.add('is-invalid');
+                        wrapper.classList.remove('is-valid');
+                    }
+                } else {
+                    wrapper.classList.remove('has-value', 'is-valid', 'is-invalid');
+                }
+            }
+
             nameInput.addEventListener('input', validateInputs);
             emailInput.addEventListener('input', validateInputs);
+            nameInput.addEventListener('focus', () => nameInput.closest('.input-wrapper').classList.add('focused'));
+            nameInput.addEventListener('blur', () => nameInput.closest('.input-wrapper').classList.remove('focused'));
+            emailInput.addEventListener('focus', () => emailInput.closest('.input-wrapper').classList.add('focused'));
+            emailInput.addEventListener('blur', () => emailInput.closest('.input-wrapper').classList.remove('focused'));
 
             if (data && result) {
                 const formDetails = document.querySelector('.formbold-event-details:first-of-type ul');
@@ -103,47 +173,50 @@
                 `;
 
                 document.getElementById('reveal-button').addEventListener('click', function () {
-
                     const predictedScoreOutput = document.getElementById('predicted-score-output');
                     predictedScoreOutput.innerHTML = `
                         <strong>Predicted Score:</strong> ${result.predicted_scores[desired_targets] || 'N/A'}
                     `;
-
-                    // Hide the button after click
                     this.style.display = 'none';
                 });
 
                 // Add Google Sheet submission functionality
                 submitButton.addEventListener('click', async function () {
                     const statusDiv = document.getElementById('submission-status');
+                    const btnText = submitButton.querySelector('.btn-text');
+                    const btnLoader = submitButton.querySelector('.btn-loader');
 
                     submitButton.disabled = true;
-                    submitButton.textContent = 'Submitting...';
+                    btnText.style.display = 'none';
+                    btnLoader.style.display = 'flex';
+                    submitButton.classList.add('loading');
 
                     // Prepare flat columns for features and weights
                     const featureColumns = {};
                     Object.entries(data.features).forEach(([key, value]) => {
-                        featureColumns[`${key}_value`] = value;
+                        // Ensure zero values are preserved as 0, not null/undefined
+                        featureColumns[`${key}_value`] = (value !== null && value !== undefined) ? value : 0;
                     });
                     const weightColumns = {};
                     Object.entries(data.weight).forEach(([key, value]) => {
-                        weightColumns[`${key}_weight`] = value;
+                        // Ensure zero values are preserved as 0, not null/undefined
+                        weightColumns[`${key}_weight`] = (value !== null && value !== undefined) ? value : 0;
                     });
 
                     // Prepare flat columns for predicted_scores and weighted_scores
                     const predictedScoreColumns = {};
                     Object.entries(result.predicted_scores).forEach(([key, value]) => {
-                        predictedScoreColumns[`${key}_predicted`] = value;
+                        predictedScoreColumns[`${key}_predicted`] = (value !== null && value !== undefined) ? value : 0;
                     });
                     const weightedScoreColumns = {};
                     Object.entries(result.weighted_scores).forEach(([key, value]) => {
-                        weightedScoreColumns[`${key}_weighted`] = value;
+                        weightedScoreColumns[`${key}_weighted`] = (value !== null && value !== undefined) ? value : 0;
                     });
 
-                    // Prepare submission data
+                    // Prepare submission data with CORRECT column names (no spaces)
                     const submissionData = {
-                        student_name: nameInput.value.trim(),
-                        student_email: emailInput.value.trim(),
+                        StudentName: nameInput.value.trim(),        // Changed: no space, matches Google Sheets
+                        StudentEmail: emailInput.value.trim(),     // Changed: no space, matches Google Sheets
                         ...featureColumns,
                         ...weightColumns,
                         desired_outputs: data.desired_targets.join(", "),
@@ -151,7 +224,7 @@
                         ...weightedScoreColumns
                     };
 
-                    console.log('Submission Data:', submissionData); // Add this line
+                    console.log('Submission Data:', submissionData);
 
                     try {
                         const response = await fetch('/submit-to-sheet', {
@@ -171,7 +244,7 @@
                         statusDiv.style.display = 'block';
                         if (responseData.status === 'success') {
                             statusDiv.innerHTML = '✅ Results submitted successfully!';
-                            statusDiv.className = 'success-message';
+                            statusDiv.className = 'success-message modern-success';
                             submitButton.style.display = 'none';
                         } else {
                             throw new Error(responseData.message || 'Submission failed');
@@ -179,9 +252,14 @@
                     } catch (error) {
                         console.error('Error:', error);
                         statusDiv.innerHTML = `❌ Error submitting results: ${error.message}`;
-                        statusDiv.className = 'error-message';
+                        statusDiv.className = 'error-message modern-error';
+
+                        // Reset button state
                         submitButton.disabled = false;
-                        submitButton.textContent = 'Save to Google Sheet';
+                        btnText.style.display = 'inline';
+                        btnLoader.style.display = 'none';
+                        submitButton.classList.remove('loading');
+                        validateInputs(); // Re-enable if valid
                     }
                 });
             }
