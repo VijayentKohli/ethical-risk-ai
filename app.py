@@ -258,7 +258,8 @@ def predict():
         # Handle any errors during prediction process
         return jsonify({"error": f"An error occurred during prediction: {str(e)}"}), 500
 
-GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzxlm1ty2LfZ-6t92YD5WA4cwQxaBAh5srwucynmFdqaTm2j-WW1tpztw7Iqf08yUJ7/exec"
+# Route to handle submission of data to Google Sheets via Google Apps Script
+GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxIBXgWLCC7V6xK-KAum542Uy9WTSxNNyC1MUWGP0pCCYi5LS3gfisY7AFQ_IaAOgZK/exec"
 
 @app.route('/submit-to-sheet', methods=['POST'])
 def submit_to_sheet():
