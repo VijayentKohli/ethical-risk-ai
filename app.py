@@ -210,8 +210,20 @@ def predict():
         # Create a DataFrame from the input features
         input_df = pd.DataFrame([input_features], columns=FEATURES)
 
+        # Check if race needs to be neuratlized
+        target = valid_targets[0] if valid_targets else None
+        neutralize_race = target and target != 'cost_t'
+
+        # Create copies of data for prediction
+        features_for_prediction = input_df.copy()
+        weights_for_calculation = weights.copy()
+
+        if neutralize_race:
+            features_for_prediction['race'] = 1
+            weights_for_calculation['race'] = 0
+
         # Scale the input features using the preloaded scaler
-        input_scaled = scaler.transform(input_df)
+        input_scaled = scaler.transform(features_for_prediction)
 
         # Predict the target values based on scaled input features
         predictions = model.predict(input_scaled)[0]
@@ -241,7 +253,7 @@ def predict():
             if target in FEATURES_IMPORTANCE:
                 # Calculate weighted score using predicted score, feature importance, and request weight
                 weighted_score = selected_predictions[target] * sum(
-                    FEATURES_IMPORTANCE[target][feature] * weights[feature]
+                    FEATURES_IMPORTANCE[target][feature] * weights_for_calculation[feature]
                     for feature in FEATURES if feature in FEATURES_IMPORTANCE[target]
                 )
                 weighted_scores[target] = weighted_score
