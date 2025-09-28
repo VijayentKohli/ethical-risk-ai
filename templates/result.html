@@ -36,12 +36,7 @@
                 </div>
 
                 <h4>Output</h4>
-                <p id="weight-score-output">
-                    <!-- Dynamic content will be injected here -->
-                </p>
-
                 <button id="reveal-button" class="formbold-btn" type="button">Reveal Predicted Score</button>
-
                 <p id="predicted-score-output">
                     <!-- Predicted score will display here on button click -->
                 </p>
@@ -167,12 +162,6 @@
                 data.desired_targets.forEach(target => {
                     desiredOutput.innerHTML += `<li>${target}</li>`;
                 });
-
-                // Show weight score
-                const weightScoreOutput = document.getElementById('weight-score-output');
-                weightScoreOutput.innerHTML = `
-                    <strong>Weight Score:</strong> ${result.weighted_scores[desired_targets] || 'N/A'} <br>
-                `;
 
                 // Reveal button functionality
                 document.getElementById('reveal-button').addEventListener('click', function () {
