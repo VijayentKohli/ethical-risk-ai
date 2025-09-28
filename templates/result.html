@@ -170,8 +170,10 @@
                 // Reveal button functionality
                 document.getElementById('reveal-button').addEventListener('click', function () {
                     const predictedScoreOutput = document.getElementById('predicted-score-output');
+                    const rawScore = result.predicted_scores[desired_targets];
+                    const formattedScore = (rawScore != null) ? parseFloat(rawScore).toFixed(3) : 'N/A';
                     predictedScoreOutput.innerHTML = `
-                        <strong>Predicted Score:</strong> ${result.predicted_scores[desired_targets] || 'N/A'}
+                        <strong>Predicted Score:</strong> ${formattedScore}
                     `;
                     this.style.display = 'none';
                 });
