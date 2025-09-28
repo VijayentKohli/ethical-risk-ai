@@ -87,6 +87,9 @@
     <!-- Toast Notification -->
     <div id="toast" class="toast"></div>
 
+    <!-- Include constants first -->
+    <script src="{{ url_for('static', filename='constants.js') }}"></script>
+
     <script>
         // Simple toast function
         function showToast(message, type) {
@@ -120,7 +123,7 @@
             nameInput.addEventListener('input', validateInputs);
             emailInput.addEventListener('input', validateInputs);
 
-            // Visual input states (from your existing styles)
+            // Visual input states
             function updateInputState(input, isValid) {
                 const wrapper = input.closest('.input-wrapper');
                 if (input.value.trim() !== '') {
@@ -157,10 +160,11 @@
                     weightDetails.innerHTML += `<li><strong>${key.replace(/_/g, ' ').toUpperCase()}:</strong> ${value}</li>`;
                 }
 
-                // Populate desired output
+                // Populate desired output with display names from constants.js
                 const desiredOutput = document.getElementById('desired-output');
                 data.desired_targets.forEach(target => {
-                    desiredOutput.innerHTML += `<li>${target}</li>`;
+                    const displayName = getOutputDisplayName(target);
+                    desiredOutput.innerHTML += `<li>${displayName}</li>`;
                 });
 
                 // Reveal button functionality
