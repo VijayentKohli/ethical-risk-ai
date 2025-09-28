@@ -176,8 +176,8 @@ function validateForm() {
     console.log('Data', JSON.stringify(data));
 
     // Send the data to the API via fetch. Replace with Azure endpoint when deploying.
-    // fetch('https://healthscore-h6hdche4gyfbb5cn.southindia-01.azurewebsites.net/predict', {
-    fetch('http://127.0.0.1:5000/predict', {
+    fetch('https://ethicalhealthscore01-fgh3fcdhh2fuazd4.centralus-01.azurewebsites.net/predict', {
+        // fetch('http://127.0.0.1:5000/predict', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
