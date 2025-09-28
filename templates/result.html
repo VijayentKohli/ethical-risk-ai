@@ -169,8 +169,11 @@
                     const predictedScoreOutput = document.getElementById('predicted-score-output');
                     const rawScore = result.predicted_scores[desired_targets];
                     const formattedScore = (rawScore != null) ? parseFloat(rawScore).toFixed(3) : 'N/A';
+                    const explanation = getScoreExplanation(desired_targets);
+
                     predictedScoreOutput.innerHTML = `
-                        <strong>Predicted Score:</strong> ${formattedScore}
+                        <strong>Predicted Score:</strong> ${formattedScore}<br>
+                        <small style="color: #666; font-style: italic;">${explanation}</small>
                     `;
                     this.style.display = 'none';
                 });
