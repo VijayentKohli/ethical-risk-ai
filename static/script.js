@@ -9,11 +9,10 @@ function updateSliderValue(slider) {
 document.addEventListener("DOMContentLoaded", function () {
 
     const form = document.querySelector('form'); // Select the form element
-
     form.addEventListener('submit', function (event) {
         event.preventDefault();
 
-        // Age mapping to convert age group to a specific value
+        // Age mapping to convert age group to a numeric representative value
         const ageMapping = {
             'under_18': 18,  // Added an entry for 'under_18'
             '18_24': 21,
@@ -74,13 +73,11 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         };
 
-        console.log('Form data:', formData);
-        console.log('Form data:', JSON.stringify(formData));
-        console.log('Data', JSON.stringify(data));
+        console.log('DomContentLoad Data', JSON.stringify(data));
 
         // Send the data to the API via fetch. Replace with Azure endpoint when deploying.
-        // fetch('http://127.0.0.1:5000/predict', {
-        fetch('https://ethicalhealthscore01-fgh3fcdhh2fuazd4.centralus-01.azurewebsites.net/predict', {
+        // fetch(`${API_BASE}/predict`) will resolve to local or prod based on `constants.js`.
+        fetch(`${API_BASE}/predict`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -171,13 +168,11 @@ function validateForm() {
         }
     };
 
-    console.log('Form data:', formData);
-    console.log('Form data:', JSON.stringify(formData));
-    console.log('Data', JSON.stringify(data));
+    console.log('ValidatForm Data', JSON.stringify(data));
 
     // Send the data to the API via fetch. Replace with Azure endpoint when deploying.
-    fetch('https://ethicalhealthscore01-fgh3fcdhh2fuazd4.centralus-01.azurewebsites.net/predict', {
-        // fetch('http://127.0.0.1:5000/predict', {
+    // NOTE: This is the second fetch in this file (duplicated behavior). Use `API_BASE` from `constants.js`.
+    fetch(`${API_BASE}/predict`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',

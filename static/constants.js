@@ -24,3 +24,11 @@ function getOutputDisplayName(variableName) {
 function getScoreExplanation(variableName) {
     return SCORE_EXPLANATIONS[variableName] || '';
 }
+
+// Single source of truth for client-side API base URL.
+// Can be overridden by server-rendered window.API_BASE when needed.
+const API_BASE = window.API_BASE || (
+    (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
+        ? 'http://127.0.0.1:5000'
+        : 'https://ethicalhealthscore01-fgh3fcdhh2fuazd4.centralus-01.azurewebsites.net'
+);

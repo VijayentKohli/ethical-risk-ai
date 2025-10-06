@@ -413,6 +413,8 @@
             </div>
         </div>
 
+        <!-- Load constants first so API_BASE is available to other scripts -->
+        <script src="{{ url_for('static', filename='constants.js') }}"></script>
         <script src="{{ url_for('static', filename='script.js') }}"></script>
         <script>
             document.addEventListener('DOMContentLoaded', function () {
