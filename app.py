@@ -10,7 +10,7 @@ app = Flask(__name__)
 # Configure CORS to allow Google Apps Script domain
 CORS(app, resources={
     r"/*": {
-        "origins": ["https://script.google.com", "http://127.0.0.1:5000"],
+        "origins": ["https://script.google.com", "http://127.0.0.1:5000", "https://ethicalhealthscore01-fgh3fcdhh2fuazd4.centralus-01.azurewebsites.net"],
         "methods": ["OPTIONS", "POST", "GET"],
         "allow_headers": ["Content-Type"]
     }
@@ -272,6 +272,7 @@ def predict():
 
 # Route to handle submission of data to Google Sheets via Google Apps Script
 GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxIBXgWLCC7V6xK-KAum542Uy9WTSxNNyC1MUWGP0pCCYi5LS3gfisY7AFQ_IaAOgZK/exec"
+# "https://script.google.com/macros/s/AKfycbxIBXgWLCC7V6xK-KAum542Uy9WTSxNNyC1MUWGP0pCCYi5LS3gfisY7AFQ_IaAOgZK/exec"
 
 @app.route('/submit-to-sheet', methods=['POST'])
 def submit_to_sheet():
@@ -284,14 +285,27 @@ def submit_to_sheet():
             headers={'Content-Type': 'application/json'}
         )
         # Try to parse the response from Google Apps Script
+        # If the remote responded with success-ish status, forward JSON or text back to caller
         if response.ok:
             try:
                 result = response.json()
             except Exception:
+                # Non-JSON successful response
                 result = {'status': 'success', 'message': response.text}
             return jsonify(result), 200
-        else:
-            return jsonify({'status': 'error', 'message': f'Google Script error: {response.text}'}), 500
+
+        # Remote returned a non-2xx status. Log details and return a trimmed response body to help debugging.
+        status_code = response.status_code
+        resp_text = response.text or ''
+        # Trim overly long HTML to a useful snippet
+        snippet = resp_text[:2000] + ('...' if len(resp_text) > 2000 else '')
+        app.logger.error("Google Script POST returned status %s. Response snippet: %s", status_code, snippet)
+        return jsonify({
+            'status': 'error',
+            'message': f'Google Script error',
+            'google_status': status_code,
+            'google_response_snippet': snippet
+        }), 500
     except Exception as e:
         return jsonify({'status': 'error', 'message': str(e)}), 500
 

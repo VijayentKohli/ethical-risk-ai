@@ -107,13 +107,13 @@
 
             const nameInput = document.getElementById('student-name');
             const emailInput = document.getElementById('student-email');
-            const submitButton = document.getElementById('save-to-sheet');
+            const saveToGSheetButton = document.getElementById('save-to-sheet');
 
             // Enable/disable submit button based on input validation
             function validateInputs() {
                 const nameValid = nameInput.value.trim().length > 0;
                 const emailValid = /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(emailInput.value.trim());
-                submitButton.disabled = !(nameValid && emailValid);
+                saveToGSheetButton.disabled = !(nameValid && emailValid);
             }
 
             // Input validation events
@@ -178,10 +178,10 @@
                     this.style.display = 'none';
                 });
 
-                // Submit button functionality
-                submitButton.addEventListener('click', async function () {
-                    submitButton.disabled = true;
-                    submitButton.textContent = 'Submitting...';
+                // SUBMIT TO GOOGLE SHEET button functionality
+                saveToGSheetButton.addEventListener('click', async function () {
+                    saveToGSheetButton.disabled = true;
+                    saveToGSheetButton.textContent = 'Submitting...';
 
                     // Prepare submission data
                     const featureColumns = {};
@@ -200,6 +200,7 @@
                     });
 
                     const weightedScoreColumns = {};
+                    console.log("results : weighted scores " + result.weighted_scores);
                     Object.entries(result.weighted_scores).forEach(([key, value]) => {
                         weightedScoreColumns[`${key}_weighted`] = (value !== null && value !== undefined) ? value : 0;
                     });
@@ -225,13 +226,13 @@
 
                         if (response.ok && responseData.status === 'success') {
                             showToast('Results submitted successfully!', 'success');
-                            submitButton.textContent = '✓ Submitted';
+                            saveToGSheetButton.textContent = '✓ Submitted';
                         } else {
                             throw new Error(responseData.message || 'Submission failed');
                         }
                     } catch (error) {
                         showToast(`Error: ${error.message}`, 'error');
-                        submitButton.textContent = 'Submit Results';
+                        saveToGSheetButton.textContent = 'Submit Results';
                         validateInputs(); // Re-enable if inputs are valid
                     }
                 });
