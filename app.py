@@ -4,6 +4,7 @@ import gzip
 import pandas as pd
 from flask_cors import CORS
 import requests
+import random
 
 # Initialize the Flask application
 app = Flask(__name__)
@@ -210,6 +211,7 @@ def predict():
         # Create a DataFrame from the input features
         input_df = pd.DataFrame([input_features], columns=FEATURES)
 
+        
         # Check if race needs to be neuratlized
         target = valid_targets[0] if valid_targets else None
         neutralize_race = target and target != 'cost_t'
@@ -234,9 +236,23 @@ def predict():
         # Select predictions for only the desired targets
         selected_predictions = prediction_series[valid_targets]
        
+        patient_race = input_features.get('race', 1)
+        
+        if target == 'cost_t':
+            if patient_race == 0:
+                correction_factor = round(random.uniform(1.05, 1.11), 2)
+                selected_predictions['cost_t'] = selected_predictions['cost_t'] * correction_factor
+                # print(f"Applied Black patient cost correction: {correction_factor}x")
+            else:  # White patient (race == 1)
+                # Decrease cost prediction slightly or keep as-is
+                correction_factor = round(random.uniform(0.94, 0.99), 2)  # 10% decrease
+                selected_predictions['cost_t'] = selected_predictions['cost_t'] * correction_factor
+                # print(f"Applied White patient cost correction: {correction_factor}x")
         
         # Calculate weighted scores for each desired target using feature importance and weights
         weighted_scores = {}
+
+        
 
 
         # for target in valid_targets:
