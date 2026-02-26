@@ -402,6 +402,27 @@
                             <option value="ldl_mean_t">Mean LDL Level</option>
                         </select>
                     </div>
+
+                    <!-- OUTPUT DESCRIPTION BOX -->
+                    <div id="outputDescription" class="output-description-box" style="display: none;">
+                        <p class="description-title" style="font-size: 14px; font-family: 'Inter', sans-serif;"></p>
+                        <p class="description-definition" style="font-size: 14px; font-family: 'Inter', sans-serif;">
+                        </p>
+
+                        <div class="description-section">
+                            <p class="description-section-title"
+                                style="font-size: 14px; font-family: 'Inter', sans-serif;">What it captures:</p>
+                            <ul class="description-captures"></ul>
+                        </div>
+
+                        <div class="description-section">
+                            <p class="description-section-title"
+                                style="font-size: 14px; font-family: 'Inter', sans-serif;">Important note:</p>
+                            <p class="description-note" style="font-size: 14px; font-family: 'Inter', sans-serif;"></p>
+                        </div>
+                    </div>
+                    <!-- END OUTPUT DESCRIPTION BOX -->
+
                     <p class="formbold-policy">
                         The information shared includes your medical history, current health conditions, medications,
                         allergies, and any relevant diagnostic results. This data helps healthcare providers better
@@ -416,6 +437,81 @@
         <!-- Load constants first so API_BASE is available to other scripts -->
         <script src="{{ url_for('static', filename='constants.js') }}"></script>
         <script src="{{ url_for('static', filename='script.js') }}"></script>
+        <script>
+            // OUTPUT VARIABLE DESCRIPTION HANDLER
+            document.addEventListener('DOMContentLoaded', function () {
+                const outputSelect = document.getElementById('output');
+                const descriptionBox = document.getElementById('outputDescription');
+                const descriptionTitle = descriptionBox.querySelector('.description-title');
+                const descriptionDefinition = descriptionBox.querySelector('.description-definition');
+                const capturesList = descriptionBox.querySelector('.description-captures');
+                const descriptionNote = descriptionBox.querySelector('.description-note');
+
+                const descriptions = {
+                    'cost_t': {
+                        title: 'Total Medical Costs ("Costs")',
+                        definition: 'The total amount of money spent on a patient\'s healthcare over a given period (e.g., one year), including hospital visits, procedures, medications, and outpatient care.',
+                        captures: [
+                            'Healthcare utilization',
+                            'Intensity of services received',
+                            'Insurance reimbursements'
+                        ],
+                        importantNote: 'Costs reflect both how sick someone is and how much care they receive — which may vary across demographic groups due to differences in access, provider behavior, or insurance coverage.'
+                    },
+                    'bps_mean_t': {
+                        title: 'Mean Blood Pressure',
+                        definition: 'The average systolic and/or diastolic blood pressure reading for a patient over time.',
+                        captures: [
+                            'Cardiovascular health',
+                            'Risk for stroke, heart disease, and related complications'
+                        ],
+                        importantNote: 'Blood pressure is a direct clinical health measure, not a financial one. It reflects physiological risk but focuses primarily on one domain of health (cardiovascular risk).'
+                    },
+                    'gagne_sum_t': {
+                        title: 'Gagné Comorbidity Score',
+                        definition: 'A validated medical index that summarizes the number and severity of chronic conditions a patient has (e.g., diabetes, cancer, heart disease), producing a composite health risk score.',
+                        captures: [
+                            'Overall disease burden',
+                            'Multimorbidity (having multiple chronic illnesses)',
+                            'Risk of hospitalization and mortality'
+                        ],
+                        importantNote: 'This score is designed specifically to reflect underlying health status, independent of how much money is spent on care.'
+                    },
+                    'ldl_mean_t': {
+                        title: 'Mean LDL Level',
+                        definition: 'The average level of low-density lipoprotein (LDL) cholesterol in a patient\'s blood over time. LDL is often referred to as "bad cholesterol."',
+                        captures: [
+                            'Cardiovascular risk',
+                            'Risk for heart disease and atherosclerosis'
+                        ],
+                        importantNote: 'LDL is a biological marker tied to a specific domain of health (cardiovascular risk), not a financial or utilization measure.'
+                    }
+                };
+
+                outputSelect.addEventListener('change', function () {
+                    const selectedValue = this.value;
+
+                    if (selectedValue && descriptions[selectedValue]) {
+                        const desc = descriptions[selectedValue];
+                        descriptionTitle.textContent = desc.title;
+                        descriptionDefinition.textContent = desc.definition;
+
+                        // Clear and populate captures list
+                        capturesList.innerHTML = '';
+                        desc.captures.forEach(capture => {
+                            const li = document.createElement('li');
+                            li.textContent = capture;
+                            capturesList.appendChild(li);
+                        });
+
+                        descriptionNote.textContent = desc.importantNote;
+                        descriptionBox.style.display = 'block';
+                    } else {
+                        descriptionBox.style.display = 'none';
+                    }
+                });
+            });
+        </script>
         <script>
             document.addEventListener('DOMContentLoaded', function () {
                 const biomarkerInput = document.getElementById('biomarker');
